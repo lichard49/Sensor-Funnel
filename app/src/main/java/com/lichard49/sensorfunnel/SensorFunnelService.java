@@ -90,7 +90,8 @@ public class SensorFunnelService extends Service {
                 .setSmallIcon(R.mipmap.ic_launcher)
                 .setOngoing(true)
                 .setContentIntent(startActivity);
-        notificationManager.notify(NOTIFICATION_ID, notificationBuilder.build());
+//        notificationManager.notify(NOTIFICATION_ID, notificationBuilder.build());
+        startForeground(NOTIFICATION_ID, notificationBuilder.build());
     }
 
     private void hideNotification() {
