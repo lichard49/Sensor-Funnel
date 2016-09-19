@@ -7,12 +7,18 @@ import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
 /**
  * Created by richard on 8/14/16.
  */
 public class SensorFunnelService extends Service {
+
+    public static final String UPDATE_REQUEST = "com.lichard49.sensorfunnel.UPDATE_REQUEST"; // making a request to update the UI
+    public static final String UPDATE_DATA = "com.lichard49.sensorfunnel.UPDATE_DATA"; // the key to the data to show in the UI
+
+    private LocalBroadcastManager broadcaster;
 
     private static SensorFunnelService serviceInstance;
 
@@ -32,6 +38,7 @@ public class SensorFunnelService extends Service {
                 try {
                     Thread.sleep(1000);
                     updateNotificationContent(i + " finished");
+                    updateUI(i + " finished");
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -49,6 +56,7 @@ public class SensorFunnelService extends Service {
 
         Log.d("lichard49", "Service started!");
         serviceInstance = this;
+        broadcaster = LocalBroadcastManager.getInstance(this);
         showNotification();
     }
 
@@ -118,5 +126,13 @@ public class SensorFunnelService extends Service {
 
     public boolean isReadingData() {
         return isReadingData;
+    }
+
+    public void updateUI(String message) {
+        Intent intent = new Intent(UPDATE_REQUEST);
+        if(message != null) {
+            intent.putExtra(UPDATE_DATA, message);
+        }
+        broadcaster.sendBroadcast(intent);
     }
 }
